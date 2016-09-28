@@ -1,10 +1,10 @@
-'use strict';
-import React, {Component, PropTypes} from "react";
-import {View} from 'react-native';
+
+import React, { Component, PropTypes } from 'react';
+import {View, Text} from 'react-native';
 import xmldom from 'xmldom'; // Dependencie
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
-import Svg,{
+import Svg, {
     Circle,
     Ellipse,
     G ,
@@ -56,7 +56,7 @@ let ind = 0;
 
 class SvgUri extends Component{
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 
     this.state = {svgXmlData:null};
@@ -75,7 +75,7 @@ class SvgUri extends Component{
 	}
 
 
-  async fecthSVGData(uri){
+  async fecthSVGData(uri) {
      try {
          let response = await fetch(uri);
          let responseXML = await response.text();
@@ -87,7 +87,7 @@ class SvgUri extends Component{
   }
 
 
-  createSVGElement(node, childs){
+  createSVGElement(node, childs) {
         let componentAtts = {};
         let i = ind++;
         switch (node.nodeName) {
@@ -97,7 +97,6 @@ class SvgUri extends Component{
                 componentAtts.width = this.props.width;
              if (this.props.height)
                 componentAtts.height = this.props.height;
-
              return <Svg key={i} {...componentAtts}>{childs}</Svg>;
         case 'g':
              componentAtts = this.obtainComponentAtts(node, G_ATTS, G_ATTS_TRANSFORM);
@@ -126,19 +125,19 @@ class SvgUri extends Component{
         }
   }
 
-  obtainComponentAtts(node, ATTS_ENABLED, ATTS_TRANSFORM){
+  obtainComponentAtts(node, ATTS_ENABLED, ATTS_TRANSFORM) {
       let componentAtts = {};
-      for (let i = 0; i < node.attributes.length; i++){
+      for (let i = 0; i < node.attributes.length; i++) {
           let att = node.attributes[i];
-          if (att.nodeName in ATTS_TRANSFORM){
+          if (att.nodeName in ATTS_TRANSFORM) {
               att = this.transformSVGAtt(node.nodeName, att.nodeName, att.nodeValue);
               componentAtts = Object.assign({}, componentAtts, att);
           }else{
 
-              if (att.nodeName in ATTS_TRANSFORMED_NAMES){
+              if (att.nodeName in ATTS_TRANSFORMED_NAMES) {
                 componentAtts[ATTS_TRANSFORMED_NAMES[att.nodeName]] = att.nodeValue;
               }else{
-                  if (att.nodeName in ATTS_ENABLED){ // Valida que el atributo sea mapeable
+                  if (att.nodeName in ATTS_ENABLED) { // Valida que el atributo sea mapeable
                       componentAtts[att.nodeName] = att.nodeValue;
                   }else{
                       ;
@@ -149,11 +148,11 @@ class SvgUri extends Component{
       return componentAtts;
   }
 
-  transformSVGAtt(component, attName, attValue){
-      if (attName == 'style'){
+  transformSVGAtt(component, attName, attValue) {
+      if (attName == 'style') {
           let styleAtts = attValue.split(';');
           let newAtts = {};
-          for (let i = 0; i < styleAtts.length; i++){
+          for (let i = 0; i < styleAtts.length; i++) {
               let styleAtt = styleAtts[i].split(':');
               if (!styleAtt[1] || styleAtt[1] == '')
                   continue;
@@ -165,19 +164,19 @@ class SvgUri extends Component{
           return newAtts;
       }
 
-      if (attName == 'x' || attName == 'y' || attName == 'height' || attName == 'width'){
+      if (attName == 'x' || attName == 'y' || attName == 'height' || attName == 'width') {
           let newAtts = {};
           newAtts[attName] = attValue.replace('px', ''); // Remove the px
           return newAtts;
       }
-      if (attName == 'viewBox'){
+      if (attName == 'viewBox') {
         let newAtts = {};
         newAtts['viewbox'] = attValue; // El atributo va en minuscula
         return newAtts;
       }
   }
 
-  inspectNode(node){
+  inspectNode(node) {
       //Process the xml node
       let arrayElements = [];
 
@@ -187,8 +186,8 @@ class SvgUri extends Component{
       // if have children process them.
 
       // Recursive function.
-      if (node.childNodes && node.childNodes.length > 0){
-          for (let i = 0; i < node.childNodes.length; i++){
+      if (node.childNodes && node.childNodes.length > 0) {
+          for (let i = 0; i < node.childNodes.length; i++) {
               let nodo = this.inspectNode(node.childNodes[i]);
               if (nodo != null)
                   arrayElements.push(nodo);
@@ -198,8 +197,8 @@ class SvgUri extends Component{
       return element;
   }
 
-	render(){
-    try{
+	render() {
+    try {
         if (this.state.svgXmlData == null)
             return null;
 
@@ -212,9 +211,12 @@ class SvgUri extends Component{
         return(
             <View style={this.props.style}>
               {rootSVG}
+              <View style={[{ position: 'absolute', left: 0, top: 0, width: this.props.width, height: this.props.height, justifyContent: 'center', alignItems: 'center'}, this.props.innerStyle]}>
+                {this.props.children}
+              </View>
             </View>
         );
-    }catch(e){
+    } catch(e) {
       console.error("ERROR SVG", e);
       return null;
     }
