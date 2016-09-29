@@ -97,28 +97,28 @@ class SvgUri extends Component{
                 componentAtts.width = this.props.width;
              if (this.props.height)
                 componentAtts.height = this.props.height;
-             return <Svg key={i} {...componentAtts}>{childs}</Svg>;
+             return <Svg key={i} {...componentAtts, fill: this.props.fill}>{childs}</Svg>;
         case 'g':
              componentAtts = this.obtainComponentAtts(node, G_ATTS, G_ATTS_TRANSFORM);
-            return <G key={i} {...componentAtts}>{childs}</G>;
+            return <G key={i} {...componentAtts, fill: this.props.fill}>{childs}</G>;
         case 'path':
              componentAtts = this.obtainComponentAtts(node, PATH_ATTS, PATH_ATTS_TRANSFORM);
-            return <Path key={i} {...componentAtts}>{childs}</Path>;
+            return <Path key={i} {...componentAtts, fill: this.props.fill}>{childs}</Path>;
         case 'circle':
              componentAtts = this.obtainComponentAtts(node, CIRCLE_ATTS, CIRCLE_ATTS_TRANSFORM);
-            return <Circle key={i} {...componentAtts}>{childs}</Circle>;
+            return <Circle key={i} {...componentAtts, fill: this.props.fill}>{childs}</Circle>;
         case 'rect':
              componentAtts = this.obtainComponentAtts(node, RECT_ATTS, RECT_ATTS_TRANSFORM);
-            return <Rect key={i} {...componentAtts}>{childs}</Rect>;
+            return <Rect key={i} {...componentAtts, fill: this.props.fill}>{childs}</Rect>;
         case 'linearGradient':
              componentAtts = this.obtainComponentAtts(node, LINEARG_ATTS, LINEARG_ATTS_TRANSFORM);
-            return <Defs><LinearGradient key={i} {...componentAtts}>{childs}</LinearGradient></Defs>;
+            return <Defs><LinearGradient key={i} {...componentAtts, fill: this.props.fill}>{childs}</LinearGradient></Defs>;
         case 'radialGradient':
              componentAtts = this.obtainComponentAtts(node, RADIALG_ATTS, RADIALG_ATTS_TRANSFORM);
-            return <Defs><RadialGradient key={i} {...componentAtts}>{childs}</RadialGradient></Defs>;
+            return <Defs><RadialGradient key={i} {...componentAtts, fill: this.props.fill}>{childs}</RadialGradient></Defs>;
         case 'stop':
              componentAtts = this.obtainComponentAtts(node, STOP_ATTS, STOP_ATTS_TRANSFORM);
-            return <Stop key={i} {...componentAtts}>{childs}</Stop>;
+            return <Stop key={i} {...componentAtts, fill: this.props.fill}>{childs}</Stop>;
         default:
           return null;
           break;
@@ -211,9 +211,6 @@ class SvgUri extends Component{
         return(
             <View style={this.props.style}>
               {rootSVG}
-              <View style={[{ position: 'absolute', left: 0, top: 0, width: this.props.width, height: this.props.height, justifyContent: 'center', alignItems: 'center'}, this.props.innerStyle]}>
-                {this.props.children}
-              </View>
             </View>
         );
     } catch(e) {
