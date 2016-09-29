@@ -22,5 +22,5 @@
   "dependencies": {
     "xmldom": "^0.1.22",
     "react-native-svg": "^4.3.1"
-  },
+  }
 }
